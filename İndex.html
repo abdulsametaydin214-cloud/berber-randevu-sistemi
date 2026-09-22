@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Berber Randevu Sistemi</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { font-family: Arial, sans-serif; background: #121212; color: #fff; margin: 0; padding: 20px; }
+        .container { max-width: 400px; margin: 0 auto; background: #1e1e1e; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        h2 { text-align: center; color: #f39c12; }
+        label { display: block; margin-top: 10px; font-size: 14px; }
+        input, select { width: 100%; padding: 10px; margin-top: 5px; background: #2c2c2c; border: 1px solid #444; color: #fff; border-radius: 5px; box-sizing: border-box; }
+        button { width: 100%; background: #f39c12; color: #000; border: none; padding: 12px; margin-top: 20px; font-weight: bold; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #e67e22; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Berber Randevu</h2>
+    <form id="randevuForm">
+        <label>Adınız Soyadınız:</label>
+        <input type="text" id="musteri_adi" required>
+
+        <label>Telefon Numaranız:</label>
+        <input type="tel" id="telefon" required>
+
+        <label>Hizmet Seçin:</label>
+        <select id="hizmet" required>
+            <option value="Saç Kesimi">Saç Kesimi</option>
+            <option value="Sakal Tıraşı">Sakal Tıraşı</option>
+            <option value="Saç + Sakal">Saç + Sakal</option>
+        </select>
+
+        <label>Tarih ve Saat:</label>
+        <input type="datetime-local" id="tarih_saat" required>
+
+        <button type="submit">Randevu Oluştur</button>
+    </form>
+</div>
+
+<script>
+    const SUPABASE_URL = 'BURAYA_SUPABASE_URL_YAZILACAK';
+    const SUPABASE_ANON_KEY = 'BURAYA_SUPABASE_ANON_KEY_YAZILACAK';
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    document.getElementById('randevuForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const musteri_adi = document.getElementById('musteri_adi').value;
+        const telefon = document.getElementById('telefon').value;
+        const hizmet = document.getElementById('hizmet').value;
+        const tarih_saat = document.getElementById('tarih_saat').value;
+
+        const { data, error } = await supabaseClient
+            .from('randevular')
+            .insert([{ musteri_adi, telefon, hizmet, tarih_saat }]);
+
+        if (error) {
+            alert('Hata oluştu: ' + error.message);
+        } else {
+            alert('Randevunuz başarıyla oluşturuldu!');
+            document.getElementById('randevuForm').reset();
+        }
+    });
+</script>
+
+</body>
+  </html>
+  
